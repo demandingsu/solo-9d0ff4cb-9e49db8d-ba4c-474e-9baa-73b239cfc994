@@ -36,7 +36,11 @@ def index(request: Request):
 
 
 @app.get("/check", response_class=HTMLResponse)
-def check(request: Request, url: str = Query(..., min_length=1)):
+def check(
+    request: Request,
+    url: str = Query(..., min_length=1),
+    max_pages: int = Query(400, ge=1, le=400),
+):
     url = url.strip()
     if not url.startswith(("http://", "https://")):
         return templates.TemplateResponse(
@@ -45,7 +49,7 @@ def check(request: Request, url: str = Query(..., min_length=1)):
             context={"message": "请输入以 http:// 或 https:// 开头的藏品列表页地址。"},
             status_code=400,
         )
-    crawler = Crawler(url, rewrite_spec=REWRITE_SPEC)
+    crawler = Crawler(url, rewrite_spec=REWRITE_SPEC, max_pages=max_pages)
     try:
         result = crawler.run()
     except CrawlError as e:

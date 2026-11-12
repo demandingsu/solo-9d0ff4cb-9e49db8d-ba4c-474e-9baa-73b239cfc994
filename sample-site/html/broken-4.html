@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="page-kind" content="list">
+<title>残缺目录四 · 抓取截断（故障演示）</title>
+<style>
+body{font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif;max-width:760px;margin:24px auto;padding:0 16px;color:#24292f}
+.muted{color:#57606a;font-size:14px}
+ul.entries li{margin:6px 0}
+</style>
+</head>
+<body>
+<h1>残缺目录四 · 抓取截断（故障演示）</h1>
+<p class="muted">本目录本身页面完好，但通过核对工具的 <code>max_pages=5</code> 参数限制抓取页数，
+模拟大目录抓取到页数上限被截断（报告提示「达到抓取页数上限，结果可能不完整」）。
+用于演示：截断时排在队列后部的套件（套-011）与器件尚未抓到，依赖这些套件记录的
+反向结论判「无法确认」；已抓取页面直接证实的结论（如 瓷-701 与 套-010 一致）不受影响。首页已提供带参数的核对入口。</p>
+<ul class="entries">
+  <li><a href="suite/t010.html">套-010 漆器套件</a></li>
+  <li><a href="suite/t011.html">套-011 牙雕套件</a></li>
+  <li><a href="item/c701.html">瓷-701 剔红盒（与套-010 一致）</a></li>
+  <li><a href="item/c704.html">瓷-704 无所属器件（首页直链，截断时仍被抓到）</a></li>
+  <li><a href="item/c702.html">瓷-702 无所属器件（未注明）</a></li>
+  <li><a href="item/c703.html">瓷-703 指向未抓到套件的器件</a></li>
+</ul>
+<p><a href="index.html">返回主目录</a></p>
+</body>
+</html>

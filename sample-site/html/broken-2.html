@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="page-kind" content="list">
+<title>残缺目录二 · 列表分页失效（故障演示）</title>
+<style>
+body{font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif;max-width:760px;margin:24px auto;padding:0 16px;color:#24292f}
+.muted{color:#57606a;font-size:14px}
+ul.entries li{margin:6px 0}
+</style>
+</head>
+<body>
+<h1>残缺目录二 · 列表分页失效（故障演示）</h1>
+<p class="muted">本目录第 2 页（list-2-missing.html）已被删除，服务器返回 <strong>404</strong>，
+后续分页中的套件与器件无法发现。用于演示：列表分页抓取失败导致套件目录不完整时，
+未注明所属套件的器件不直接判「未被套件列入」、指向未抓到套件的器件不直接判「归属不符」，
+统一改判「无法确认」并附失败地址；两份已抓取页面直接证实的错挂仍照常报告。</p>
+<ul class="entries">
+  <li><a href="suite/t005.html">套-005 竹刻陈设套件</a></li>
+  <li><a href="item/c501.html">瓷-501 竹刻臂搁</a></li>
+  <li><a href="item/c502.html">瓷-502 竹刻笔筒</a></li>
+  <li><a href="item/c503.html">瓷-503 无所属器件（未注明）</a></li>
+  <li><a href="item/c504.html">瓷-504 指向缺失分页中套件的器件</a></li>
+  <li><a href="item/c505.html">瓷-505 错挂器件（已抓取页面直接证实）</a></li>
+</ul>
+<nav class="pagination">
+  <strong>1</strong>
+  <a rel="next" href="list-2-missing.html">下一页 ›（已失效，404）</a>
+</nav>
+<p><a href="index.html">返回主目录</a></p>
+</body>
+</html>

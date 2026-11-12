@@ -124,12 +124,22 @@ def parse_item(url: str, soup: BeautifulSoup) -> ItemRecord | None:
         return None
     name = _text(soup.find("h1")) or number
     suite_no = None
+    suite_link = None
     field = soup.select_one(".field-suite")
     if field is not None:
         sn = field.select_one(".suite-no")
         if sn:
             suite_no = sn.get_text(strip=True) or None
-    return ItemRecord(number=number, name=name, url=url, suite_no=suite_no)
+        # 所属套件的详情链接（同站 /suite/ 路径），用于在套件缺失时定位其抓取地址
+        a = field.find("a", href=True)
+        if a:
+            link = normalize_url(urljoin(url, a["href"]))
+            if looks_like_detail(link):
+                suite_link = link
+    return ItemRecord(
+        number=number, name=name, url=url,
+        suite_no=suite_no, suite_link=suite_link,
+    )
 
 
 class Crawler:

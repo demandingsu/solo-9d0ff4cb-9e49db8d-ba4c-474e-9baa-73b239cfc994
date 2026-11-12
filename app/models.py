@@ -30,6 +30,7 @@ class ItemRecord:
     name: str
     url: str
     suite_no: str | None = None  # 器件页标注的所属套件编号，未注明为 None
+    suite_link: str | None = None  # 器件页给出的所属套件详情链接（可选）
 
 
 @dataclass

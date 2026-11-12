@@ -12,7 +12,12 @@
 <p><a href="/">← 返回重新核对</a></p>
 
 {% if r.incomplete %}
-<div class="banner warn">⚠ 核对不完整：部分页面抓取失败或抓取被截断。未抓到的器件未被直接判为缺记录，请重点查看「抓取失败」与「无法确认」两节，修复后重新核对。</div>
+<div class="banner warn">⚠ 核对不完整：部分页面抓取失败或抓取被截断。未抓到的器件未被直接判为缺记录；若套件详情或列表分页缺失，依赖这些套件记录的反向结论改判「无法确认」。请重点查看「抓取失败」与「无法确认」两节，修复后重新核对。</div>
+{% if r.suite_catalog_incomplete %}
+<p class="muted">本次套件目录不完整（套件详情/列表分页抓取失败或抓取截断）：未注明所属套件的器件不会直接判为「未被套件列入」，指向缺失套件的器件不会直接判为「归属不符」，统一列为反向「无法确认」。仅器件详情页失败不影响已抓取器件的反向判定。</p>
+{% else %}
+<p class="muted">本次失败仅涉及器件详情页，套件目录完整：已抓取器件的反向结论（一致 / 归属不符 / 未被套件列入）照常判定。</p>
+{% endif %}
 {% else %}
 <div class="banner ok">✔ 核对完整：本次抓取未出现失败，下列结论可信。</div>
 {% endif %}
@@ -73,22 +78,57 @@
 </table>
 {% else %}<p class="empty">无</p>{% endif %}
 
-{% if r.unverifiable %}
-<h2>四、无法确认（存在抓取失败，未直接判为缺记录）<span class="badge b-warn">{{ r.unverifiable | length }}</span></h2>
+{% if r.unverifiable or r.reverse_unverifiable %}
+<h2>四、无法确认（依赖未抓到的记录，未直接判定）<span class="badge b-warn">{{ r.unverifiable | length + r.reverse_unverifiable | length }}</span></h2>
+
+{% if r.reverse_unverifiable %}
+<h3>反向核对无法确认（器件 → 套件）<span class="badge b-warn">{{ r.reverse_unverifiable | length }}</span></h3>
 <table>
-  <tr><th>器件编号</th><th>列出它的套件</th><th>原因</th><th>相关链接</th></tr>
+  <tr><th>器件</th><th>器件标注所属</th><th>原因</th><th>信息缺口与失败地址</th></tr>
+  {% for u in r.reverse_unverifiable %}
+  <tr>
+    <td><a href="{{ u.item.url }}" target="_blank"><code>{{ u.item.number }}</code></a> {{ u.item.name }}</td>
+    <td>{% if u.suite_no %}{{ u.suite_no }}{% else %}（未注明）{% endif %}</td>
+    <td>{{ u.reason }}</td>
+    <td>
+      {% for n in u.gap_notes %}<div>⚠ {{ n }}</div>{% endfor %}
+      {% for f in u.related_failures %}
+      <div>直接相关失败：<a href="{{ f.url }}" target="_blank">{{ f.url }}</a>（{{ f.reason }}）</div>
+      {% endfor %}
+      {% for f in u.other_gap_failures %}
+      <div>套件目录缺口：<a href="{{ f.url }}" target="_blank">{{ f.url }}</a>（{{ f.reason }}）</div>
+      {% endfor %}
+      {% if not u.gap_notes and not u.related_failures and not u.other_gap_failures %}
+      <span class="muted">无</span>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+{% if r.unverifiable %}
+<h3>正向核对无法确认（套件 → 器件）<span class="badge b-warn">{{ r.unverifiable | length }}</span></h3>
+<table>
+  <tr><th>器件编号</th><th>列出它的套件</th><th>原因</th><th>信息缺口与失败地址</th></tr>
   {% for u in r.unverifiable %}
   <tr>
     <td><code>{{ u.accession }}</code></td>
     <td>{{ u.suite.number }} {{ u.suite.name }}</td>
     <td>{{ u.reason }}</td>
     <td>
-      <a href="{{ u.suite.url }}" target="_blank">套件页</a>
-      {% if u.link %}<a href="{{ u.link }}" target="_blank">器件详情地址</a>{% endif %}
+      {% for n in u.gap_notes %}<div>⚠ {{ n }}</div>{% endfor %}
+      {% for f in u.related_failures %}
+      <div>直接相关失败：<a href="{{ f.url }}" target="_blank">{{ f.url }}</a>（{{ f.reason }}）</div>
+      {% endfor %}
+      {% for f in u.other_gap_failures %}
+      <div>套件目录缺口：<a href="{{ f.url }}" target="_blank">{{ f.url }}</a>（{{ f.reason }}）</div>
+      {% endfor %}
     </td>
   </tr>
   {% endfor %}
 </table>
+{% endif %}
 {% endif %}
 
 {% if r.failures or r.notes %}
